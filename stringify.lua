@@ -16,6 +16,11 @@ local subtable_start = '\29'
 -- used to delimit the end of a subtable
 local subtable_end = '\30'
 
+-- ASCII for boolean values
+local token_true = '\6' -- ASCII ACK "acknowledge"
+local token_false = '\21' -- ASCII NAK "negative acknowledge"
+
+
 function stringify_table(table)
   local str = ''
   for key, val in pairs(table) do
@@ -23,6 +28,8 @@ function stringify_table(table)
     local t = type(val)
     if t == 'table' then
       str = str..subtable_start..stringify_table(val)..subtable_end
+    elseif t == 'boolean' then
+      str = str..token_sep..(val and token_true or token_false)..token_sep
     else
       str = str..token_sep..val..token_sep
     end
